@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+skinparam interface {
+  backgroundColor RosyBrown
+  borderColor orange
+}
+
+skinparam component {
+  FontSize 13
+  FontName Courier
+  BackgroundColor gold
+  ArrowFontColor #777777
+}
+skinparam database {
+    BackgroundColor aqua
+}
+
+node "block_chain" #lightblue {
+    [proxy_contract] as proxy
+    [stake_contract] as stake
+}
+
+node "Golang" #lightyellow {
+    [contract_event] as stake_go
+}
+
+node "Java" #lightyellow {
+    [stake_fe] as api
+    [stake_admin] as admin
+}
+
+database "stake_db"  {
+   
+}
+
+proxy -> stake: contract deletgate call
+stake_go -u-> block_chain: subscribe event
+stake_go -r-> stake_db : write data
+api <-l- stake_db : get data
+admin -d->stake_go : update contract
+admin <--stake_db : update data
+
+'-------------------------------------------------
+
+
+@enduml
